@@ -1,10 +1,8 @@
 package cz.vasic2000.icash.mvp.model.entity.realm;
 
-
-import androidx.room.PrimaryKey;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class RealmUser extends RealmObject {
 

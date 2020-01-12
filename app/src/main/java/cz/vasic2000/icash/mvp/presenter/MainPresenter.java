@@ -5,15 +5,16 @@ import android.annotation.SuppressLint;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.vasic2000.icash.mvp.model.cash.PaperCashe;
+import cz.vasic2000.icash.mvp.model.cash.RealmCashe;
+import cz.vasic2000.icash.mvp.model.cash.RoomCashe;
 import cz.vasic2000.icash.mvp.model.entity.Repository;
 import cz.vasic2000.icash.mvp.model.entity.User;
-import cz.vasic2000.icash.mvp.model.repo.PaperUsersRepo;
-import cz.vasic2000.icash.mvp.model.repo.RealmUsersRepo;
-import cz.vasic2000.icash.mvp.model.repo.RoomUsersRepo;
 import cz.vasic2000.icash.mvp.model.repo.UsersRepo;
 import cz.vasic2000.icash.mvp.presenter.list.IRepositoryListPresenter;
 import cz.vasic2000.icash.mvp.view.MainView;
 import cz.vasic2000.icash.mvp.view.list.ReposotoryItemView;
+import cz.vasic2000.icash.ui.NetworkStatus;
 import io.reactivex.Scheduler;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Consumer;
@@ -46,7 +47,11 @@ public class MainPresenter extends MvpPresenter<MainView> {
             return clickSubject;
         }
     }
-    private RoomUsersRepo usersRepo;
+
+    private UsersRepo usersRepo;
+
+//    private UsersRepo userRepo;
+//    private RoomUsersRepo usersRepo;
 //    private RealmUsersRepo usersRepo;
 //    private PaperUsersRepo usersRepo;
     private Scheduler mainThreadScheduler;
@@ -54,8 +59,9 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     public MainPresenter(Scheduler mainThreadScheduler) {
 //        this.usersRepo = new PaperUsersRepo();
-        this.usersRepo = new RoomUsersRepo();
+//        this.usersRepo = new UsersRepo();
 //        this.usersRepo = new PaperUsersRepo();
+        this.usersRepo = new UsersRepo(new NetworkStatus(), new RealmCashe());
         this.mainThreadScheduler = mainThreadScheduler;
         repositoryListPresenter = new RepositoryListPresenter();
     }
