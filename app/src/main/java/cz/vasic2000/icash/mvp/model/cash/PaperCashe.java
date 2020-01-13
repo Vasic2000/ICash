@@ -1,6 +1,7 @@
 package cz.vasic2000.icash.mvp.model.cash;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import cz.vasic2000.icash.mvp.model.entity.Repository;
 import cz.vasic2000.icash.mvp.model.entity.User;
@@ -15,8 +16,13 @@ public class PaperCashe implements ICashe {
         if (!Paper.book("users").contains(userName)) {
             return Single.error(new RuntimeException("no such user in cache"));
         }
-        return Single.fromCallable(() -> Paper.book("users")
-                .read(userName));
+        return Single.fromCallable(new Callable<User>() {
+            @Override
+            public User call() throws Exception {
+                return Paper.book("users")
+                        .read(userName);
+            }
+        });
     }
 
     @Override

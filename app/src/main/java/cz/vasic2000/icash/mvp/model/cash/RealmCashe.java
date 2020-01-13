@@ -44,15 +44,21 @@ public class RealmCashe implements ICashe {
                                               Realm realm = Realm.getDefaultInstance();
                                               RealmUser realmUser = realm.where(RealmUser.class).equalTo("login", username).findFirst();
                                               if (realmUser == null) {
-                                                  realm.executeTransaction(innerRealm -> {
-                                                      RealmUser newRealmUser = innerRealm.createObject(RealmUser.class, username);
-                                                      newRealmUser.setAvatarUrl(user.getAvatarUrl());
-                                                      newRealmUser.setReposUrl(user.getReposUrl());
+                                                  realm.executeTransaction(new Realm.Transaction() {
+                                                      @Override
+                                                      public void execute(Realm innerRealm) {
+                                                          RealmUser newRealmUser = innerRealm.createObject(RealmUser.class, username);
+                                                          newRealmUser.setAvatarUrl(user.getAvatarUrl());
+                                                          newRealmUser.setReposUrl(user.getReposUrl());
+                                                      }
                                                   });
                                               } else {
-                                                  realm.executeTransaction(innerRealm -> {
-                                                      realmUser.setAvatarUrl(user.getAvatarUrl());
-                                                      realmUser.setReposUrl(user.getReposUrl());
+                                                  realm.executeTransaction(new Realm.Transaction() {
+                                                      @Override
+                                                      public void execute(Realm innerRealm) {
+                                                          realmUser.setAvatarUrl(user.getAvatarUrl());
+                                                          realmUser.setReposUrl(user.getReposUrl());
+                                                      }
                                                   });
                                               }
                                               realm.close();
@@ -96,10 +102,13 @@ public class RealmCashe implements ICashe {
                 RealmUser realmUser = realm.where(RealmUser.class).equalTo("login", user.getLogin()).findFirst();
 
                 if (realmUser == null) {
-                    realm.executeTransaction(innerRealm -> {
-                        RealmUser newRealmUser = innerRealm.createObject(RealmUser.class, user.getLogin());
-                        newRealmUser.setAvatarUrl(user.getAvatarUrl());
-                        newRealmUser.setReposUrl(user.getReposUrl());
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm innerRealm) {
+                            RealmUser newRealmUser = innerRealm.createObject(RealmUser.class, user.getLogin());
+                            newRealmUser.setAvatarUrl(user.getAvatarUrl());
+                            newRealmUser.setReposUrl(user.getReposUrl());
+                        }
                     });
                 }
 

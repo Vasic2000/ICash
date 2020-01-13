@@ -61,7 +61,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
 //        this.usersRepo = new PaperUsersRepo();
 //        this.usersRepo = new UsersRepo();
 //        this.usersRepo = new PaperUsersRepo();
-        this.usersRepo = new UsersRepo(new NetworkStatus(), new RealmCashe());
+        this.usersRepo = new UsersRepo(new NetworkStatus(), new RoomCashe());
         this.mainThreadScheduler = mainThreadScheduler;
         repositoryListPresenter = new RepositoryListPresenter();
     }
