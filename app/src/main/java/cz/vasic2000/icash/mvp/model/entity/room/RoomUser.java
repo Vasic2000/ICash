@@ -28,6 +28,9 @@ public class RoomUser {
         this.reposUrl = reposUrl;
     }
 
+    public RoomUser() {
+    }
+
     public String getName() {
         return name;
     }
