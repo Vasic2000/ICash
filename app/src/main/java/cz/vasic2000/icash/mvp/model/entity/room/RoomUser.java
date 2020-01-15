@@ -17,7 +17,7 @@ public class RoomUser {
     private String reposUrl;
     private String name;
 
-    public RoomUser(String login){
+    public RoomUser(@NonNull String login){
         this.login = login;
     }
 

@@ -3,6 +3,7 @@ package cz.vasic2000.icash.mvp.model.repo;
 import java.util.List;
 
 import cz.vasic2000.icash.mvp.model.api.ApiHolder;
+import cz.vasic2000.icash.mvp.model.api.IDataSource;
 import cz.vasic2000.icash.mvp.model.api.INetworkStatus;
 import cz.vasic2000.icash.mvp.model.cash.ICashe;
 import cz.vasic2000.icash.mvp.model.entity.Repository;
@@ -15,11 +16,12 @@ public class UsersRepo {
 
     private INetworkStatus networkStatus;
     private ICashe iCashe;
+    private IDataSource api;
 
-
-    public UsersRepo(INetworkStatus networkStatus, ICashe iCashe) {
+    public UsersRepo(INetworkStatus networkStatus, IDataSource api, ICashe iCashe) {
         this.networkStatus = networkStatus;
         this.iCashe = iCashe;
+        this.api = api;
     }
 
     public Single<User> getUser(String userName) {

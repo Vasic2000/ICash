@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cz.vasic2000.icash.App;
 import cz.vasic2000.icash.R;
 import cz.vasic2000.icash.mvp.model.image.IImageLoader;
 import cz.vasic2000.icash.mvp.presenter.MainPresenter;
@@ -54,7 +55,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     @ProvidePresenter
     public MainPresenter providePresenter(){
-        return new MainPresenter(AndroidSchedulers.mainThread());
+        MainPresenter presenter = new MainPresenter(AndroidSchedulers.mainThread());
+        App.getInstance().getAppComponent().inject(presenter);
+        return presenter;
     }
 
     @Override
