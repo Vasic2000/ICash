@@ -9,10 +9,12 @@ import javax.inject.Inject;
 
 import cz.vasic2000.icash.mvp.model.entity.Repository;
 import cz.vasic2000.icash.mvp.model.entity.User;
-import cz.vasic2000.icash.mvp.model.repo.UsersRepo;
+import cz.vasic2000.icash.mvp.model.repo.IUsersRepo;
+
 import cz.vasic2000.icash.mvp.presenter.list.IRepositoryListPresenter;
 import cz.vasic2000.icash.mvp.view.MainView;
 import cz.vasic2000.icash.mvp.view.list.ReposotoryItemView;
+
 import io.reactivex.Scheduler;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Consumer;
@@ -21,6 +23,7 @@ import io.reactivex.subjects.PublishSubject;
 
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
+
 import timber.log.Timber;
 
 @InjectViewState
@@ -47,7 +50,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     @Inject
-    UsersRepo usersRepo;
+    IUsersRepo usersRepo;
 
     private Scheduler mainThreadScheduler;
     private RepositoryListPresenter repositoryListPresenter;
@@ -68,8 +71,11 @@ public class MainPresenter extends MvpPresenter<MainView> {
         getViewState().init();
         loadData();
 
-        repositoryListPresenter.getClickSubject().subscribe(countryRowView -> {
-            getViewState().showMessage(repositoryListPresenter.repositories.get(countryRowView.getPos()).getName());
+        repositoryListPresenter.getClickSubject().subscribe(new Consumer<ReposotoryItemView>() {
+            @Override
+            public void accept(ReposotoryItemView countryRowView) throws Exception {
+                MainPresenter.this.getViewState().showMessage(repositoryListPresenter.repositories.get(countryRowView.getPos()).getName());
+            }
         });
     }
 
@@ -81,8 +87,8 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 .flatMap(new Function<User, SingleSource<? extends List<Repository>>>() {
                     @Override
                     public SingleSource<? extends List<Repository>> apply(User user) throws Exception {
-                        MainPresenter.this.getViewState().setUsername(user.getLogin());
-                        MainPresenter.this.getViewState().loadImage(user.getAvatarUrl());
+                        getViewState().setUsername(user.getLogin());
+                        getViewState().loadImage(user.getAvatarUrl());
                         return usersRepo.getUserRepos(user)
                                 .observeOn(mainThreadScheduler);
                     }
@@ -92,12 +98,15 @@ public class MainPresenter extends MvpPresenter<MainView> {
                     public void accept(List<Repository> repositories) throws Exception {
                         repositoryListPresenter.repositories.clear();
                         repositoryListPresenter.repositories.addAll(repositories);
-                        MainPresenter.this.getViewState().updateList();
-                        MainPresenter.this.getViewState().hideLoading();
+                        getViewState().updateList();
+                        getViewState().hideLoading();
                     }
-                }, t -> {
-                    getViewState().hideLoading();
-                    Timber.e(t);
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable t) throws Exception {
+                        MainPresenter.this.getViewState().hideLoading();
+                        Timber.e(t);
+                    }
                 });
     }
 }

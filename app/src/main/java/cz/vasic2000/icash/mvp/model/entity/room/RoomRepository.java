@@ -1,13 +1,11 @@
 package cz.vasic2000.icash.mvp.model.entity.room;
 
-
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
-
 
 @Entity(foreignKeys = @ForeignKey(entity = RoomUser.class, parentColumns = "login", childColumns = "userLogin", onDelete = CASCADE))
 public class RoomRepository {
