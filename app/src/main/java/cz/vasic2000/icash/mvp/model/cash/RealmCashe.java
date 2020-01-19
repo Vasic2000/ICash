@@ -7,9 +7,6 @@ import cz.vasic2000.icash.mvp.model.entity.Repository;
 import cz.vasic2000.icash.mvp.model.entity.User;
 import cz.vasic2000.icash.mvp.model.entity.realm.RealmRepository;
 import cz.vasic2000.icash.mvp.model.entity.realm.RealmUser;
-import cz.vasic2000.icash.mvp.model.entity.room.RoomRepository;
-import cz.vasic2000.icash.mvp.model.entity.room.RoomUser;
-import cz.vasic2000.icash.mvp.model.entity.room.db.Database;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
@@ -19,6 +16,7 @@ import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
 public class RealmCashe implements ICashe {
+
     @Override
     public Single<User> getUser(String username) {
         return Single.create(new SingleOnSubscribe<Object>() {
@@ -72,18 +70,15 @@ public class RealmCashe implements ICashe {
         return Single.create(new SingleOnSubscribe<Object>() {
             @Override
             public void subscribe(SingleEmitter<Object> emitter) throws Exception {
-                RoomUser roomUser = Database.getInstance()
-                        .getUserDao()
-                        .findByLogin(user.getLogin());
+                Realm realm = Realm.getDefaultInstance();
+                RealmUser realmUser = realm.where(RealmUser.class).equalTo("login", user.getLogin()).findFirst();
 
-                if (roomUser == null) {
+                if (realmUser == null) {
                     emitter.onError(new RuntimeException("No such user in cache"));
                 } else {
-                    List<RoomRepository> roomRepositories = Database.getInstance().getRepositoryDao()
-                            .getAll();
-
+                    List<RealmRepository> realmRepositories = realmUser.getRepos();
                     List<Repository> repos = new ArrayList<>();
-                    for (RoomRepository roomRepository : roomRepositories) {
+                    for (RealmRepository roomRepository : realmRepositories) {
                         repos.add(new Repository(roomRepository.getId(), roomRepository.getName()));
                     }
 

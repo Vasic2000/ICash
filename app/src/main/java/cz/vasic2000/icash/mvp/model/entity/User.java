@@ -11,8 +11,6 @@ public class User {
     private String avatarUrl;
     @Expose
     private String reposUrl;
-    @Expose
-    private String name;
 
     public User(String login, String avatarUrl, String reposUrl) {
         this.login = login;
@@ -30,9 +28,5 @@ public class User {
 
     public String getReposUrl() {
         return reposUrl;
-    }
-
-    public String getName() {
-        return name;
     }
 }

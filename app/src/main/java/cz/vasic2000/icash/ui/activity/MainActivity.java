@@ -10,14 +10,16 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cz.vasic2000.icash.App;
 import cz.vasic2000.icash.R;
 import cz.vasic2000.icash.mvp.model.image.IImageLoader;
 import cz.vasic2000.icash.mvp.presenter.MainPresenter;
 import cz.vasic2000.icash.mvp.view.MainView;
 import cz.vasic2000.icash.ui.adapter.RepositoriesRVAdapter;
-import cz.vasic2000.icash.ui.image.GlideImageLoader;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
@@ -43,18 +45,22 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     RepositoriesRVAdapter adapter;
 
-    IImageLoader<ImageView> imageLoader = new GlideImageLoader();
+    @Inject
+    IImageLoader<ImageView> imageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.getInstance().getAppComponent().inject(this);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
     }
 
     @ProvidePresenter
     public MainPresenter providePresenter(){
-        return new MainPresenter(AndroidSchedulers.mainThread());
+        MainPresenter presenter = new MainPresenter(AndroidSchedulers.mainThread());
+        App.getInstance().getAppComponent().inject(presenter);
+        return presenter;
     }
 
     @Override
