@@ -22,7 +22,7 @@ public class RoomUser {
         this.reposUrl = reposUrl;
     }
 
-    public String getLogin() {
+  public String getLogin() {
         return login;
     }
 

@@ -22,6 +22,7 @@ public class RoomCashe implements ICashe {
 
     @Override
     public Single<User> getUser(String username) {
+
         return Single.create(emitter -> {
             RoomUser roomUser = database.getUserDao()
                     .findByLogin(username);
@@ -55,10 +56,10 @@ public class RoomCashe implements ICashe {
 
     @Override
     public Single<List<Repository>> getUserRepos(User user) {
+
         return Single.create(emitter -> {
             RoomUser roomUser = database.getUserDao()
                     .findByLogin(user.getLogin());
-
             if (roomUser == null) {
                 emitter.onError(new RuntimeException("No such user in cache"));
             } else {
@@ -77,6 +78,7 @@ public class RoomCashe implements ICashe {
 
     @Override
     public Completable putUserRepos(User user, List<Repository> repositories) {
+
         return Completable.fromAction(() -> {
             RoomUser roomUser = database.getUserDao()
                     .findByLogin(user.getLogin());
